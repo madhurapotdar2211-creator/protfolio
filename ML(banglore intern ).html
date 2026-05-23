@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Madhura Potdar — AI/ML Engineer & CS Student</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy2: #0f1f3d;
+    --blue: #1a4fd6;
+    --blue2: #2563eb;
+    --accent: #f5c842;
+    --accent2: #ffd966;
+    --white: #f8f6f1;
+    --off: #e8e4da;
+    --muted: #8a92a6;
+    --text: #1a1f2e;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'DM Sans', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--navy);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ── CURSOR ── */
+  .cursor {
+    position: fixed; width: 10px; height: 10px;
+    background: var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+  }
+  .cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1.5px solid rgba(245,200,66,.45); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease, width 0.3s, height 0.3s, opacity 0.3s;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 3rem;
+    background: rgba(10,22,40,.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .logo {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    color: var(--accent);
+    letter-spacing: .02em;
+  }
+  .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+  .nav-links a {
+    font-size: .82rem; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; font-weight: 500;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: flex; align-items: center;
+    padding: 8rem 3rem 4rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(26,79,214,.18) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 80% 80%, rgba(245,200,66,.07) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; opacity: .04;
+    background-image: linear-gradient(rgba(248,246,241,.6) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(248,246,241,.6) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-content { position: relative; max-width: 900px; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: rgba(245,200,66,.12); border: 1px solid rgba(245,200,66,.3);
+    border-radius: 2rem; padding: .35rem 1rem;
+    font-family: var(--mono); font-size: .72rem; color: var(--accent);
+    letter-spacing: .06em; margin-bottom: 1.8rem;
+    animation: fadeUp .8s ease both;
+  }
+  .hero-tag::before { content: '◈'; font-size: .6rem; }
+  .hero h1 {
+    font-family: var(--serif); font-size: clamp(3rem, 7vw, 5.5rem);
+    line-height: 1.08; letter-spacing: -.02em;
+    animation: fadeUp .8s .1s ease both;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub {
+    margin-top: 1.4rem; font-size: 1.05rem; color: var(--muted);
+    max-width: 520px; line-height: 1.7;
+    animation: fadeUp .8s .2s ease both;
+  }
+  .hero-cta {
+    display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap;
+    animation: fadeUp .8s .3s ease both;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .75rem 1.8rem; border-radius: .35rem;
+    font-size: .85rem; font-weight: 600; letter-spacing: .04em;
+    text-decoration: none; transition: all .22s; cursor: pointer; border: none;
+  }
+  .btn-primary { background: var(--accent); color: var(--navy); }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent; color: var(--white);
+    border: 1.5px solid rgba(255,255,255,.25);
+  }
+  .btn-outline:hover { border-color: var(--white); transform: translateY(-2px); }
+
+  .hero-stats {
+    display: flex; gap: 2.5rem; margin-top: 3.5rem;
+    animation: fadeUp .8s .4s ease both;
+  }
+  .stat-item { text-align: left; }
+  .stat-num {
+    font-family: var(--serif); font-size: 2.2rem;
+    color: var(--accent); line-height: 1;
+  }
+  .stat-label { font-size: .78rem; color: var(--muted); margin-top: .25rem; letter-spacing: .04em; }
+
+  .hero-avatar {
+    position: absolute; right: 3rem; top: 50%; transform: translateY(-50%);
+    width: 340px; height: 340px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(26,79,214,.3) 0%, rgba(10,22,40,0) 100%);
+    border: 1px solid rgba(255,255,255,.08);
+    display: flex; align-items: center; justify-content: center;
+    animation: fadeIn 1s .5s ease both;
+  }
+  .avatar-inner {
+    width: 280px; height: 280px; border-radius: 50%;
+    background: linear-gradient(145deg, #152a52, #0f1f3d);
+    border: 1px solid rgba(245,200,66,.25);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: .5rem;
+  }
+  .avatar-initials {
+    font-family: var(--serif); font-size: 4.5rem; color: var(--accent); line-height: 1;
+  }
+  .avatar-role { font-size: .7rem; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; }
+
+  /* ── SECTIONS ── */
+  section { padding: 5rem 3rem; }
+  .section-label {
+    font-family: var(--mono); font-size: .72rem; color: var(--accent);
+    letter-spacing: .14em; text-transform: uppercase; margin-bottom: 1rem;
+    display: flex; align-items: center; gap: .75rem;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: rgba(245,200,66,.2); max-width: 80px; }
+  .section-title {
+    font-family: var(--serif); font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15; margin-bottom: 3rem;
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  .about-text p { color: var(--muted); line-height: 1.85; font-size: .95rem; margin-bottom: 1.2rem; }
+  .about-text strong { color: var(--white); font-weight: 600; }
+  .about-info { display: flex; flex-direction: column; gap: 1rem; }
+  .info-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: .9rem 1.2rem;
+    background: rgba(255,255,255,.04); border-radius: .5rem;
+    border: 1px solid rgba(255,255,255,.07);
+    transition: border-color .2s;
+  }
+  .info-row:hover { border-color: rgba(245,200,66,.3); }
+  .info-label { font-size: .78rem; color: var(--muted); letter-spacing: .05em; }
+  .info-value { font-size: .9rem; font-weight: 500; color: var(--white); }
+
+  /* ── SKILLS ── */
+  .skills-section { background: rgba(255,255,255,.02); }
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem;
+  }
+  .skill-card {
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
+    border-radius: .75rem; padding: 1.5rem;
+    transition: all .25s; position: relative; overflow: hidden;
+  }
+  .skill-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(26,79,214,.1) 0%, transparent 60%);
+    opacity: 0; transition: opacity .3s;
+  }
+  .skill-card:hover { border-color: rgba(245,200,66,.35); transform: translateY(-4px); }
+  .skill-card:hover::before { opacity: 1; }
+  .skill-icon { font-size: 1.6rem; margin-bottom: .75rem; }
+  .skill-card h3 { font-size: .85rem; font-weight: 600; letter-spacing: .04em; margin-bottom: .75rem; color: var(--white); }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .skill-tag {
+    font-family: var(--mono); font-size: .68rem;
+    padding: .25rem .65rem; border-radius: 3rem;
+    background: rgba(255,255,255,.06); color: var(--muted);
+    border: 1px solid rgba(255,255,255,.08);
+  }
+  .skill-tag.jd {
+    background: rgba(245,200,66,.12); color: var(--accent);
+    border-color: rgba(245,200,66,.25);
+  }
+
+  /* ── PROJECTS ── */
+  .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .project-card {
+    background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08);
+    border-radius: 1rem; padding: 2rem;
+    transition: all .25s; position: relative; overflow: hidden;
+  }
+  .project-card::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--accent));
+    transform: scaleX(0); transform-origin: left; transition: transform .35s;
+  }
+  .project-card:hover { border-color: rgba(255,255,255,.18); transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,.4); }
+  .project-card:hover::after { transform: scaleX(1); }
+  .proj-num {
+    font-family: var(--mono); font-size: .7rem; color: var(--accent);
+    letter-spacing: .1em; margin-bottom: 1rem;
+  }
+  .project-card h3 { font-family: var(--serif); font-size: 1.4rem; margin-bottom: .75rem; line-height: 1.2; }
+  .project-card .proj-desc { font-size: .88rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.2rem; }
+  .proj-impact {
+    background: rgba(245,200,66,.08); border: 1px solid rgba(245,200,66,.2);
+    border-radius: .4rem; padding: .5rem .9rem; margin-bottom: 1.2rem;
+    font-size: .8rem; color: var(--accent);
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .proj-impact::before { content: '⚡'; }
+  .proj-stack { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .stack-tag {
+    font-family: var(--mono); font-size: .68rem;
+    padding: .3rem .7rem; border-radius: 3px;
+    background: rgba(26,79,214,.2); color: #7ea5f8;
+    border: 1px solid rgba(26,79,214,.3);
+  }
+
+  /* ── EDUCATION ── */
+  .edu-timeline { position: relative; padding-left: 2rem; }
+  .edu-timeline::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 1px; background: linear-gradient(to bottom, var(--accent), rgba(245,200,66,.1));
+  }
+  .edu-item {
+    position: relative; margin-bottom: 2.5rem;
+    padding: 1.5rem 2rem; background: rgba(255,255,255,.03);
+    border: 1px solid rgba(255,255,255,.07); border-radius: .75rem;
+    transition: border-color .2s;
+  }
+  .edu-item:hover { border-color: rgba(245,200,66,.3); }
+  .edu-dot {
+    position: absolute; left: -2.5rem; top: 1.75rem;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent); border: 2px solid var(--navy);
+    box-shadow: 0 0 0 3px rgba(245,200,66,.2);
+  }
+  .edu-year { font-family: var(--mono); font-size: .72rem; color: var(--accent); margin-bottom: .5rem; }
+  .edu-item h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: .3rem; }
+  .edu-item .school { font-size: .88rem; color: var(--muted); margin-bottom: .6rem; }
+  .edu-badge {
+    display: inline-block; font-family: var(--mono); font-size: .68rem;
+    padding: .25rem .75rem; border-radius: 3rem;
+  }
+  .edu-badge.active { background: rgba(34,197,94,.1); color: #4ade80; border: 1px solid rgba(34,197,94,.25); }
+  .edu-badge.done { background: rgba(255,255,255,.06); color: var(--muted); border: 1px solid rgba(255,255,255,.1); }
+
+  /* ── WALMART MATCH ── */
+  .walmart-section {
+    background: linear-gradient(135deg, rgba(26,79,214,.08) 0%, rgba(245,200,66,.04) 100%);
+    border-top: 1px solid rgba(255,255,255,.06);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .match-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; }
+  .match-card {
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+    border-radius: .75rem; padding: 1.5rem; text-align: center;
+    transition: all .25s;
+  }
+  .match-card:hover { border-color: rgba(245,200,66,.35); }
+  .match-icon { font-size: 2rem; margin-bottom: .75rem; }
+  .match-card h3 { font-size: .9rem; font-weight: 600; margin-bottom: .5rem; }
+  .match-card p { font-size: .82rem; color: var(--muted); line-height: 1.6; }
+  .jd-table { width: 100%; margin-top: 2rem; border-collapse: collapse; }
+  .jd-table th {
+    text-align: left; padding: .75rem 1.2rem; font-size: .75rem;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--accent);
+    background: rgba(245,200,66,.06); border-bottom: 1px solid rgba(255,255,255,.07);
+  }
+  .jd-table td {
+    padding: .85rem 1.2rem; font-size: .88rem; color: var(--muted);
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    vertical-align: middle;
+  }
+  .jd-table tr:hover td { background: rgba(255,255,255,.02); color: var(--white); }
+  .jd-table td:first-child { color: var(--white); font-weight: 500; }
+  .match-pill {
+    display: inline-flex; align-items: center; gap: .3rem;
+    font-family: var(--mono); font-size: .68rem;
+    padding: .25rem .7rem; border-radius: 3rem;
+    background: rgba(34,197,94,.1); color: #4ade80;
+    border: 1px solid rgba(34,197,94,.2);
+  }
+  .match-pill::before { content: '✓'; }
+
+  /* ── CONTACT ── */
+  .contact-wrapper {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  input, textarea {
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+    border-radius: .5rem; padding: .85rem 1.1rem;
+    font-family: var(--sans); font-size: .9rem; color: var(--white);
+    outline: none; transition: border-color .2s; resize: vertical;
+    width: 100%;
+  }
+  input::placeholder, textarea::placeholder { color: var(--muted); }
+  input:focus, textarea:focus { border-color: rgba(245,200,66,.5); }
+  .contact-links { display: flex; flex-direction: column; gap: 1.2rem; }
+  .contact-link {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.1rem 1.5rem; background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08); border-radius: .75rem;
+    color: var(--white); text-decoration: none; transition: all .22s;
+  }
+  .contact-link:hover { border-color: rgba(245,200,66,.35); transform: translateX(5px); }
+  .link-icon {
+    width: 40px; height: 40px; border-radius: .5rem;
+    background: rgba(26,79,214,.2); display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; flex-shrink: 0;
+  }
+  .link-text h4 { font-size: .85rem; font-weight: 600; margin-bottom: .15rem; }
+  .link-text p { font-size: .78rem; color: var(--muted); }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 2.5rem 3rem;
+    border-top: 1px solid rgba(255,255,255,.06);
+    font-size: .8rem; color: var(--muted);
+  }
+  footer span { color: var(--accent); }
+
+  /* ── WALMART APPLY BANNER ── */
+  .apply-banner {
+    background: linear-gradient(135deg, #1a4fd6 0%, #0f1f3d 100%);
+    border: 1px solid rgba(245,200,66,.25); border-radius: 1rem;
+    padding: 2.5rem 3rem; margin: 0 3rem 4rem;
+    display: flex; justify-content: space-between; align-items: center; gap: 2rem;
+  }
+  .banner-left h2 { font-family: var(--serif); font-size: 1.8rem; margin-bottom: .4rem; }
+  .banner-left p { font-size: .9rem; color: rgba(255,255,255,.65); }
+  .walmart-logo {
+    font-family: var(--serif); font-size: 1.4rem;
+    color: var(--accent); margin-bottom: .3rem;
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .stipend { font-family: var(--mono); font-size: .78rem; color: #4ade80; margin-top: .3rem; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--navy); }
+  ::-webkit-scrollbar-thumb { background: rgba(245,200,66,.3); border-radius: 5px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 7rem 1.5rem 4rem; }
+    .hero-avatar { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .about-grid, .projects-grid, .contact-wrapper { grid-template-columns: 1fr; gap: 2rem; }
+    .match-grid { grid-template-columns: 1fr; }
+    .apply-banner { flex-direction: column; margin: 0 1.5rem 3rem; padding: 2rem; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="curRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Madhura Potdar</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#walmart">JD Match</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">B.Tech CSE — MGM's College of Engineering, Nanded</div>
+    <h1>Building <em>intelligent</em><br>systems that scale</h1>
+    <p class="hero-sub">AI / ML Engineer & Computer Science student passionate about distributed systems, machine learning, and writing code that powers millions of users — just like Walmart's global tech stack.</p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">View Projects →</a>
+      <a href="mailto:madhurapotdar2211@gmail.com" class="btn btn-outline">Get in Touch</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">2</div>
+        <div class="stat-label">AI Projects</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">7+</div>
+        <div class="stat-label">CGPA</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3+</div>
+        <div class="stat-label">Languages</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2028</div>
+        <div class="stat-label">Grad Year</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-avatar">
+    <div class="avatar-inner">
+      <div class="avatar-initials">Madhura Potdar</div>
+      <div class="avatar-role">AI / ML Engineer</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">About Me</div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <h2 class="section-title">Curious engineer,<br>problem solver.</h2>
+      <p>I'm Madhura Potdar, a Computer Science & Engineering student at MGM's College of Engineering, Nanded, graduating in 2028. I specialise in <strong>AI / ML systems</strong>, with a strong foundation in <strong>Data Structures, Algorithms</strong>, and <strong>Object-Oriented Programming</strong>.</p>
+      <p>I build real-world AI projects — from voice assistants to chatbot training systems — driven by a passion for creating <strong>scalable, intelligent solutions</strong> that solve genuine problems. I thrive in fast-paced, results-driven environments and bring strong analytical and decision-making skills to every challenge.</p>
+      <p>Currently seeking the <strong>Walmart Global Tech India Software Engineering Internship (2028 batch)</strong> to gain hands-on experience with enterprise-scale distributed systems.</p>
+    </div>
+    <div class="about-info reveal">
+      <div class="info-row"><span class="info-label">Full Name</span><span class="info-value">Madhura Potdar</span></div>
+      <div class="info-row"><span class="info-label">Email</span><span class="info-value">madhurapotdar2211@gmail.com</span></div>
+      <div class="info-row"><span class="info-label">Phone</span><span class="info-value">+91 9860563495</span></div>
+      <div class="info-row"><span class="info-label">Location</span><span class="info-value">Nanded, Maharashtra, India</span></div>
+      <div class="info-row"><span class="info-label">Degree</span><span class="info-value">B.Tech CSE (Pursuing)</span></div>
+      <div class="info-row"><span class="info-label">CGPA</span><span class="info-value">7.0+ (All Semesters)</span></div>
+      <div class="info-row"><span class="info-label">Batch</span><span class="info-value">2028 Graduate</span></div>
+      <div class="info-row"><span class="info-label">Status</span><span class="info-value" style="color:#4ade80">✦ Open to Internships</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="skills-section">
+  <div class="section-label">Technical Skills</div>
+  <h2 class="section-title reveal">What I bring<br>to the table.</h2>
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <div class="skill-icon">⚙️</div>
+      <h3>Programming Languages</h3>
+      <div class="skill-tags">
+        <span class="skill-tag jd">Java</span>
+        <span class="skill-tag jd">C</span>
+        <span class="skill-tag">Python</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-icon">🧮</div>
+      <h3>Core CS Fundamentals</h3>
+      <div class="skill-tags">
+        <span class="skill-tag jd">DSA</span>
+        <span class="skill-tag jd">OOP</span>
+        <span class="skill-tag jd">Algorithms</span>
+        <span class="skill-tag">Design Patterns</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-icon">🤖</div>
+      <h3>AI / Machine Learning</h3>
+      <div class="skill-tags">
+        <span class="skill-tag jd">ML</span>
+        <span class="skill-tag jd">NLP</span>
+        <span class="skill-tag">Speech Recognition</span>
+        <span class="skill-tag">Chatbot Design</span>
+        <span class="skill-tag">Intent Recognition</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-icon">🗄️</div>
+      <h3>Database & Query</h3>
+      <div class="skill-tags">
+        <span class="skill-tag jd">SQL</span>
+        <span class="skill-tag">Relational DB</span>
+        <span class="skill-tag">Schema Design</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-icon">☁️</div>
+      <h3>Systems & Cloud</h3>
+      <div class="skill-tags">
+        <span class="skill-tag jd">Distributed Systems</span>
+        <span class="skill-tag jd">SOA</span>
+        <span class="skill-tag jd">Cloud Computing</span>
+        <span class="skill-tag">Scalable Architecture</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-icon">🔧</div>
+      <h3>DevOps & Tools</h3>
+      <div class="skill-tags">
+        <span class="skill-tag">Git / GitHub</span>
+        <span class="skill-tag jd">CI/CD</span>
+        <span class="skill-tag">Linux</span>
+        <span class="skill-tag">AWS Basics</span>
+      </div>
+    </div>
+  </div>
+  <p style="margin-top:1.2rem;font-size:.78rem;color:var(--muted);font-family:var(--mono)">
+    <span style="color:var(--accent)">◈</span> Yellow-highlighted skills are directly from Walmart's JD requirements
+  </p>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">Projects</div>
+  <h2 class="section-title reveal">Work that speaks<br>for itself.</h2>
+  <div class="projects-grid">
+    <div class="project-card reveal">
+      <div class="proj-num">PROJECT / 01</div>
+      <h3>Jarvic Voice Assistant</h3>
+      <p class="proj-desc">A fully functional voice-based intelligent assistant capable of executing real-time commands through speech recognition and NLP. Designed with modular, scalable architecture — mirroring the kind of associate-facing tools used at enterprise scale.</p>
+      <div class="proj-impact">30% improvement in command recognition accuracy via intent classification</div>
+      <div class="proj-stack">
+        <span class="stack-tag">Python</span>
+        <span class="stack-tag">NLP</span>
+        <span class="stack-tag">Speech Recognition</span>
+        <span class="stack-tag">OOP</span>
+        <span class="stack-tag">Automation</span>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="proj-num">PROJECT / 02</div>
+      <h3>BotTrainer — Chatbot Training System</h3>
+      <p class="proj-desc">An end-to-end intelligent chatbot training framework with intent recognition and response generation pipelines. Built to handle large structured datasets — directly applicable to Walmart's massive in-memory customer databases and interaction systems.</p>
+      <div class="proj-impact">ML + rule-based hybrid pipeline improving conversational accuracy by design</div>
+      <div class="proj-stack">
+        <span class="stack-tag">Python</span>
+        <span class="stack-tag">Machine Learning</span>
+        <span class="stack-tag">Intent Recognition</span>
+        <span class="stack-tag">Structured Data</span>
+        <span class="stack-tag">Feature Engineering</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-label">Education</div>
+  <h2 class="section-title reveal">Academic<br>background.</h2>
+  <div class="edu-timeline">
+    <div class="edu-item reveal">
+      <div class="edu-dot"></div>
+      <div class="edu-year">2024 — 2028 (Expected)</div>
+      <h3>B.Tech — Computer Science & Engineering</h3>
+      <p class="school">MGM's College of Engineering, Nanded, Maharashtra</p>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:.75rem">Aggregate CGPA: <strong style="color:var(--white)">7.0+</strong> across all semesters · Eligible: 2028 Graduate Batch</p>
+      <span class="edu-badge active">Currently Pursuing</span>
+    </div>
+    <div class="edu-item reveal">
+      <div class="edu-dot"></div>
+      <div class="edu-year">Completed</div>
+      <h3>Diploma — Computer Engineering</h3>
+      <p class="school">Government Residential Women's Polytechnic, Latur, Maharashtra</p>
+      <span class="edu-badge done">Completed</span>
+    </div>
+  </div>
+
+  <div style="margin-top:2.5rem" class="reveal">
+    <h3 style="font-family:var(--serif);font-size:1.3rem;margin-bottom:1rem">Relevant Coursework</h3>
+    <div class="skill-tags" style="display:flex;flex-wrap:wrap;gap:.5rem">
+      <span class="skill-tag jd">Data Structures & Algorithms</span>
+      <span class="skill-tag jd">Object-Oriented Programming</span>
+      <span class="skill-tag jd">DBMS / SQL</span>
+      <span class="skill-tag">Operating Systems</span>
+      <span class="skill-tag">Computer Networks</span>
+      <span class="skill-tag jd">Artificial Intelligence</span>
+      <span class="skill-tag jd">Machine Learning</span>
+      <span class="skill-tag">Software Engineering</span>
+      <span class="skill-tag jd">Cloud Computing</span>
+      <span class="skill-tag">Discrete Mathematics</span>
+    </div>
+  </div>
+</section>
+
+<!-- WALMART MATCH -->
+<section id="walmart" class="walmart-section">
+  <div class="section-label">Walmart JD Alignment</div>
+  <h2 class="section-title reveal">Built for this<br>opportunity.</h2>
+
+  <div class="match-grid reveal">
+    <div class="match-card">
+      <div class="match-icon">🏗️</div>
+      <h3>Distributed Systems</h3>
+      <p>Strong grasp of SOA, scalable architecture and large-scale system design — ready to contribute to Walmart's world's largest private cloud.</p>
+    </div>
+    <div class="match-card">
+      <div class="match-icon">🧠</div>
+      <h3>AI/ML Integration</h3>
+      <p>Hands-on experience building ML pipelines and NLP systems — directly applicable to Walmart's AI-powered digital transformation.</p>
+    </div>
+    <div class="match-card">
+      <div class="match-icon">🚀</div>
+      <h3>Ownership Mindset</h3>
+      <p>Self-driven learner who independently built and deployed two real AI projects with measurable outcomes — not just coursework.</p>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top:2.5rem">
+    <table class="jd-table">
+      <thead>
+        <tr>
+          <th>Walmart JD Requirement</th>
+          <th>My Qualification</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Graduating in 2028</td>
+          <td>B.Tech CSE, graduating 2028</td>
+          <td><span class="match-pill">Matched</span></td>
+        </tr>
+        <tr>
+          <td>Aggregate CGPA ≥ 7.0</td>
+          <td>7.0+ maintained across all semesters</td>
+          <td><span class="match-pill">Matched</span></td>
+        </tr>
+        <tr>
+          <td>DSA, Algorithms, OOP</td>
+          <td>Core curriculum + applied in both projects</td>
+          <td><span class="match-pill">Matched</span></td>
+        </tr>
+        <tr>
+          <td>Proficiency in C/C++/Java</td>
+          <td>Proficient in C, C++, Java + Python</td>
+          <td><span class="match-pill">Matched</span></td>
+        </tr>
+        <tr>
+          <td>Scalable & distributed systems</td>
+          <td>Studied & applied SOA, cloud computing, scalable design</td>
+          <td><span class="match-pill">Matched</span></td>
+        </tr>
+        <tr>
+          <td>AI/ML integrations</td>
+          <td>2 independent AI/ML projects (Jarvic + BotTrainer)</td>
+          <td><span class="match-pill">Matched</span></td>
+        </tr>
+        <tr>
+          <td>Problem solving & analytical skills</td>
+          <td>Strong DSA foundation + data-driven project outcomes</td>
+          <td><span class="match-pill">Matched</span></td>
+        </tr>
+        <tr>
+          <td>Self-driven, fast-paced environment</td>
+          <td>Built & deployed 2 full projects independently</td>
+          <td><span class="match-pill">Matched</span></td>
+        </tr>
+        <tr>
+          <td>CSE / eligible branch</td>
+          <td>B.Tech Computer Science & Engineering</td>
+          <td><span class="match-pill">Matched</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">Get in Touch</div>
+  <div class="contact-wrapper">
+    <div class="reveal">
+      <h2 class="section-title">Let's connect<br>and build.</h2>
+      <p style="color:var(--muted);font-size:.92rem;line-height:1.7;margin-bottom:2rem">I'm actively seeking internship opportunities and open to connecting with recruiters, engineers, and fellow builders. Feel free to reach out.</p>
+      <div class="contact-links">
+        <a href="mailto:madhurapotdar2211@gmail.com" class="contact-link">
+          <div class="link-icon">✉️</div>
+          <div class="link-text">
+            <h4>Email</h4>
+            <p>madhurapotdar2211@gmail.com</p>
+          </div>
+        </a>
+        <a href="tel:+919860563495" class="contact-link">
+          <div class="link-icon">📱</div>
+          <div class="link-text">
+            <h4>Phone</h4>
+            <p>+91 9860563495</p>
+          </div>
+        </a>
+        <a href="https://linkedin.com/in/madhura-potdar-800450313" target="_blank" class="contact-link">
+          <div class="link-icon">💼</div>
+          <div class="link-text">
+            <h4>LinkedIn</h4>
+            <p>linkedin.com/in/madhurapotdar</p>
+          </div>
+        </a>
+        <a href="https://github.com/madhurapotdar2211-creator" target="_blank" class="contact-link">
+          <div class="link-icon">🐙</div>
+          <div class="link-text">
+            <h4>GitHub</h4>
+            <p>github.com/madhurapotdar</p>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="contact-form reveal">
+      <h3 style="font-family:var(--serif);font-size:1.4rem;margin-bottom:1rem">Send a message</h3>
+      <div class="form-row">
+        <input type="text" placeholder="Your Name">
+        <input type="email" placeholder="Your Email">
+      </div>
+      <input type="text" placeholder="Subject">
+      <textarea rows="5" placeholder="Your message..."></textarea>
+      <button class="btn btn-primary" style="align-self:flex-start" onclick="
+        const inputs = document.querySelectorAll('input, textarea');
+        let ok = true;
+        inputs.forEach(i => { if(!i.value.trim()) ok = false; });
+        if(ok) {
+          this.textContent = '✓ Message Sent!';
+          this.style.background = '#4ade80';
+          this.style.color = '#0a1628';
+          inputs.forEach(i => i.value = '');
+          setTimeout(() => { this.textContent = 'Send Message →'; this.style.background=''; this.style.color=''; }, 3000);
+        } else {
+          this.textContent = 'Please fill all fields';
+          this.style.background = '#ef4444';
+          setTimeout(() => { this.textContent = 'Send Message →'; this.style.background=''; }, 2000);
+        }
+      ">Send Message →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Designed & built by <span>Madhura Potdar</span> · AI/ML Engineer · Nanded, Maharashtra · 2025</p>
+  <p style="margin-top:.4rem">B.Tech CSE — MGM's College of Engineering · Batch of <span>2028</span></p>
+</footer>
+
+<script>
+  // Custom cursor
+  const cur = document.getElementById('cur');
+  const ring = document.getElementById('curRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cur.style.left = mx + 'px'; cur.style.top = my + 'px'; });
+  function animRing() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animRing); }
+  animRing();
+  document.querySelectorAll('a, button, .skill-card, .project-card, .info-row').forEach(el => {
+    el.addEventListener('mouseenter', () => { cur.style.width = '18px'; cur.style.height = '18px'; ring.style.width = '52px'; ring.style.height = '52px'; ring.style.opacity = '.6'; });
+    el.addEventListener('mouseleave', () => { cur.style.width = '10px'; cur.style.height = '10px'; ring.style.width = '36px'; ring.style.height = '36px'; ring.style.opacity = '1'; });
+  });
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Smooth nav active state
+  const sections = document.querySelectorAll('section[id], div[id]');
+  const links = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
+    links.forEach(l => { l.style.color = l.getAttribute('href') === '#' + cur ? '#f8f6f1' : ''; });
+  });
+
+  // Typing effect in hero tag
+  const tagEl = document.querySelector('.hero-tag');
+  const original = tagEl.textContent;
+  tagEl.textContent = '';
+  let ti = 0;
+  function typeTag() { if (ti <= original.length) { tagEl.textContent = original.slice(0, ti++); setTimeout(typeTag, 35); } }
+  setTimeout(typeTag, 400);
+</script>
+</body>
+</html>
